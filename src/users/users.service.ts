@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Model } from 'mongoose';
@@ -11,15 +11,19 @@ export class UsersService {
   
   create(createUserDto: CreateUserDto) {
     // return 'This action adds a new user: ' + [...Object.values(createUserDto)].join(', ');
-    return this.userModel.create(createUserDto);
+    try {
+      return this.userModel.create(createUserDto);
+    } catch (error) {
+      throw new ConflictException('user email must be unigue');
+    }
   }
 
-  findAll() {
-    return this.userModel.find();
+  findAll(email: string) {
+    return this.userModel.find({email: {$ne: email}});
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  findOne(email: string) {
+    return this.userModel.findOne({ email });
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
