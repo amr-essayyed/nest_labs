@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, ConflictException, NotFoundException, UnauthorizedException, Req, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, ConflictException, NotFoundException, UnauthorizedException, Req, Res, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Response, Request } from 'express';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -21,12 +21,9 @@ export class UsersController {
   ) {}
 
   @Post('sign-up')
+  @UsePipes(new ValidationPipe())
   async signUp(@Body() createUserDto: CreateUserDto) {
-    try {
-      return this.authService.signUp(createUserDto);
-    } catch (error) {
-      throw new ConflictException(error?.message);
-    }
+    return this.authService.signUp(createUserDto);
   }
 
   @Post('log-in')

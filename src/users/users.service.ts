@@ -10,12 +10,7 @@ export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
   
   create(createUserDto: CreateUserDto) {
-    // return 'This action adds a new user: ' + [...Object.values(createUserDto)].join(', ');
-    try {
-      return this.userModel.create(createUserDto);
-    } catch (error) {
-      throw new ConflictException('user email must be unigue');
-    }
+    return this.userModel.create(createUserDto);
   }
 
   findAll(email: string) {
